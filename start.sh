@@ -2,6 +2,10 @@
 set -e
 
 echo "== Boot =="
+
+# Supprimer le fichier maintenance s'il existe
+rm -f /var/www/html/.maintenance
+
 echo "MYSQLHOST=${MYSQLHOST}"
 echo "MYSQLPORT=${MYSQLPORT}"
 echo "MYSQLDATABASE=${MYSQLDATABASE}"
