@@ -24,10 +24,14 @@ $table_prefix = 'wp_';
 define('WP_HOME', 'https://wordpress-production-2b8e.up.railway.app');
 define('WP_SITEURL', 'https://wordpress-production-2b8e.up.railway.app');
 
-// ⭐ NOUVEAU : Forcer HTTPS derrière le proxy Railway
+// ⭐ Forcer HTTPS derrière le proxy Railway
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
     $_SERVER['HTTPS'] = 'on';
 }
+
+// ⭐ NOUVEAU : Mode de récupération - désactiver plugins et thème custom
+define('WP_ALLOW_REPAIR', true);
+define('DISALLOW_FILE_MODS', true);
 
 // ** Debug mode ** //
 define('WP_DEBUG', true);
