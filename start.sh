@@ -11,7 +11,10 @@ cat > /var/www/html/wp-config.php <<'EOF'
 define('DB_NAME', getenv('MYSQLDATABASE'));
 define('DB_USER', getenv('MYSQLUSER'));
 define('DB_PASSWORD', getenv('MYSQLPASSWORD'));
-define('DB_HOST', getenv('MYSQLHOST') . ':' . getenv('MYSQLPORT'));
+
+// IMPORTANT: keep host WITHOUT port to avoid socket weirdness
+define('DB_HOST', getenv('MYSQLHOST'));
+define('DB_PORT', getenv('MYSQLPORT'));
 
 define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
@@ -25,6 +28,10 @@ define('WP_DEBUG_DISPLAY', true);
 if ( ! defined('ABSPATH') ) {
   define('ABSPATH', __DIR__ . '/');
 }
+
+// Force WP to use DB_PORT (some setups ignore DB_PORT)
+$GLOBALS['wpdb']->dbport = defined('DB_PORT') ? DB_PORT : null;
+
 require_once ABSPATH . 'wp-settings.php';
 EOF
 
