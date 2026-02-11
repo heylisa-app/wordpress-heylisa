@@ -20,3 +20,6 @@ RUN { \
     echo "memory_limit=512M"; \
     echo "max_execution_time=300"; \
   } > /usr/local/etc/php/conf.d/zzz-custom.ini
+
+  # Railway exposes the app on $PORT (often 8080). Make Apache listen on it.
+CMD ["bash", "-lc", "sed -i \"s/Listen 80/Listen ${PORT:-8080}/\" /etc/apache2/ports.conf && apache2-foreground"]
