@@ -28,13 +28,6 @@ export WORDPRESS_DB_NAME="${MYSQLDATABASE}"
 export WORDPRESS_DB_USER="${MYSQLUSER}"
 export WORDPRESS_DB_PASSWORD="${MYSQLPASSWORD}"
 
-# Config extra avec debug
-export WORDPRESS_CONFIG_EXTRA=$'define("WP_DEBUG", true);\n'\
-$'define("WP_DEBUG_LOG", true);\n'\
-$'define("WP_DEBUG_DISPLAY", true);\n'\
-$'@ini_set("mysqli.default_socket","");\n'\
-$'@ini_set("pdo_mysql.default_socket","");\n'
-
 echo "== Starting php-fpm =="
 docker-entrypoint.sh php-fpm -D
 
