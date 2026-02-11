@@ -1,19 +1,10 @@
-FROM wordpress:php8.2-apache
+FROM wordpress:php8.2-fpm
 
-# HARD FIX: ensure Apache loads only ONE MPM module (prefork)
-RUN set -eux; \
-  # remove any enabled MPM modules (symlinks) if present
-  rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf || true; \
-  rm -f /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf || true; \
-  rm -f /etc/apache2/mods-enabled/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.conf || true; \
-  \
-  # enable prefork (create symlinks)
-  a2enmod mpm_prefork; \
-  \
-  # sanity: disable others (even if not enabled)
-  a2dismod mpm_event mpm_worker || true
+# Install nginx
+RUN apt-get update && apt-get install -y --no-install-recommends nginx \
+  && rm -rf /var/lib/apt/lists/*
 
-# Increase limits for backups & restore (UpdraftPlus)
+# PHP limits (useful for Updraft restore)
 RUN { \
     echo "upload_max_filesize=256M"; \
     echo "post_max_size=256M"; \
@@ -21,5 +12,30 @@ RUN { \
     echo "max_execution_time=300"; \
   } > /usr/local/etc/php/conf.d/zzz-custom.ini
 
-  # Railway exposes the app on $PORT (often 8080). Make Apache listen on it.
-CMD ["bash", "-lc", "sed -i \"s/Listen 80/Listen ${PORT:-8080}/\" /etc/apache2/ports.conf && apache2-foreground"]
+# Nginx config (Railway uses $PORT, default 8080)
+RUN rm -f /etc/nginx/sites-enabled/default
+RUN cat > /etc/nginx/sites-available/wordpress <<'EOF'
+server {
+  listen 8080;
+  server_name _;
+  root /var/www/html;
+
+  index index.php index.html;
+
+  client_max_body_size 256M;
+
+  location / {
+    try_files $uri $uri/ /index.php?$args;
+  }
+
+  location ~ \.php$ {
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_pass 127.0.0.1:9000;
+  }
+}
+EOF
+RUN ln -s /etc/nginx/sites-available/wordpress /etc/nginx/sites-enabled/wordpress
+
+# Start php-fpm + nginx together
+CMD ["bash", "-lc", "sed -i \"s/listen = 9000/listen = 127.0.0.1:9000/\" /usr/local/etc/php-fpm.d/zz-docker.conf 2>/dev/null || true; php-fpm -D; nginx -g 'daemon off;'"]
