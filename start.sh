@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
-# Generate wp-config.php at runtime if missing
-if [ ! -f /var/www/html/wp-config.php ]; then
+echo "🧹 Removing any existing wp-config.php"
+rm -f /var/www/html/wp-config.php
+
+echo "📝 Generating fresh wp-config.php from Railway MySQL env vars"
+
 cat > /var/www/html/wp-config.php <<'EOF'
 <?php
 define('DB_NAME', getenv('MYSQLDATABASE'));
 define('DB_USER', getenv('MYSQLUSER'));
 define('DB_PASSWORD', getenv('MYSQLPASSWORD'));
-define('DB_HOST', getenv('MYSQLHOST'));
-define('DB_PORT', getenv('MYSQLPORT'));
+define('DB_HOST', getenv('MYSQLHOST') . ':' . getenv('MYSQLPORT'));
 
 define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
@@ -25,10 +27,9 @@ if ( ! defined('ABSPATH') ) {
 }
 require_once ABSPATH . 'wp-settings.php';
 EOF
-fi
 
-# Let the official entrypoint do its job (wp core copy, etc.)
+echo "🚀 Starting PHP-FPM via official WordPress entrypoint"
 docker-entrypoint.sh php-fpm -D
 
-# Run nginx in foreground
+echo "🌐 Starting Nginx"
 exec nginx -g "daemon off;"
