@@ -1,10 +1,12 @@
 FROM wordpress:php8.2-fpm
 
-# Install nginx
-RUN apt-get update && apt-get install -y --no-install-recommends nginx \
+# Install nginx + netcat
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nginx \
+    netcat-openbsd \
   && rm -rf /var/lib/apt/lists/*
 
-# PHP limits (useful for Updraft restore)
+# PHP limits
 RUN { \
     echo "upload_max_filesize=256M"; \
     echo "post_max_size=256M"; \
@@ -12,16 +14,14 @@ RUN { \
     echo "max_execution_time=300"; \
   } > /usr/local/etc/php/conf.d/zzz-custom.ini
 
-# Nginx config (Railway uses port 8080)
+# Nginx config
 RUN rm -f /etc/nginx/sites-enabled/default
 RUN cat > /etc/nginx/sites-available/wordpress <<'EOF'
 server {
   listen 8080;
   server_name _;
   root /var/www/html;
-
   index index.php index.html;
-
   client_max_body_size 256M;
 
   location / {
