@@ -28,6 +28,9 @@ export WORDPRESS_DB_NAME="${MYSQLDATABASE}"
 export WORDPRESS_DB_USER="${MYSQLUSER}"
 export WORDPRESS_DB_PASSWORD="${MYSQLPASSWORD}"
 
+# ⭐ IMPORTANT : définir AVANT php-fpm
+export WORDPRESS_CONFIG_EXTRA="define('WP_HOME', 'https://wordpress-production-2b8e.up.railway.app');\ndefine('WP_SITEURL', 'https://wordpress-production-2b8e.up.railway.app');\ndefine('WP_DEBUG', true);\ndefine('WP_DEBUG_DISPLAY', true);\ndefine('WP_DEBUG_LOG', true);\n@ini_set('display_errors', 1);"
+
 echo "== Starting php-fpm =="
 docker-entrypoint.sh php-fpm -D
 
