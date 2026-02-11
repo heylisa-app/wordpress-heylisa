@@ -8,7 +8,8 @@ cat > /var/www/html/wp-config.php <<'EOF'
 define('DB_NAME', getenv('MYSQLDATABASE'));
 define('DB_USER', getenv('MYSQLUSER'));
 define('DB_PASSWORD', getenv('MYSQLPASSWORD'));
-define('DB_HOST', getenv('MYSQLHOST') . ':' . getenv('MYSQLPORT'));
+define('DB_HOST', getenv('MYSQLHOST'));
+define('DB_PORT', getenv('MYSQLPORT'));
 
 define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
