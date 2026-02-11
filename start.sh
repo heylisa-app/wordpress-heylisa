@@ -19,17 +19,15 @@ until nc -z -v -w30 ${MYSQLHOST} ${MYSQLPORT}; do
 done
 echo "MySQL is up!"
 
-# Re-génère wp-config à chaque boot
-rm -f /var/www/html/wp-config.php
+# Copier notre wp-config custom
+echo "== Copying custom wp-config.php =="
+cp /wp-config-custom.php /var/www/html/wp-config.php
 
-# Variables WordPress standard
+# Variables WordPress (pour le wp-config.php)
 export WORDPRESS_DB_HOST="${MYSQLHOST}:${MYSQLPORT}"
 export WORDPRESS_DB_NAME="${MYSQLDATABASE}"
 export WORDPRESS_DB_USER="${MYSQLUSER}"
 export WORDPRESS_DB_PASSWORD="${MYSQLPASSWORD}"
-
-# ⭐ IMPORTANT : définir AVANT php-fpm
-export WORDPRESS_CONFIG_EXTRA="define('WP_HOME', 'https://wordpress-production-2b8e.up.railway.app');\ndefine('WP_SITEURL', 'https://wordpress-production-2b8e.up.railway.app');\ndefine('WP_DEBUG', true);\ndefine('WP_DEBUG_DISPLAY', true);\ndefine('WP_DEBUG_LOG', true);"
 
 echo "== Starting php-fpm =="
 docker-entrypoint.sh php-fpm -D
