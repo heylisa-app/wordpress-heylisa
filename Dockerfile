@@ -38,4 +38,4 @@ EOF
 RUN ln -s /etc/nginx/sites-available/wordpress /etc/nginx/sites-enabled/wordpress
 
 # Start php-fpm + nginx together
-CMD ["bash", "-lc", "sed -i \"s/listen = 9000/listen = 127.0.0.1:9000/\" /usr/local/etc/php-fpm.d/zz-docker.conf 2>/dev/null || true; php-fpm -D; nginx -g 'daemon off;'"]
+CMD ["bash", "-lc", "docker-entrypoint.sh php-fpm -D && nginx -g 'daemon off;'"]
