@@ -1,42 +1,31 @@
 #!/usr/bin/env bash
 set -e
 
-echo "🧹 Removing any existing wp-config.php"
+echo "== Boot =="
+echo "MYSQLHOST=${MYSQLHOST}"
+echo "MYSQLPORT=${MYSQLPORT}"
+echo "MYSQLDATABASE=${MYSQLDATABASE}"
+echo "MYSQLUSER=${MYSQLUSER}"
+echo "PORT=${PORT}"
+
+# Re-génère wp-config à chaque boot (pour éviter les états foireux)
 rm -f /var/www/html/wp-config.php
 
-echo "📝 Generating fresh wp-config.php from Railway MySQL env vars"
+# Variables WordPress standard attendues par l'image officielle
+export WORDPRESS_DB_HOST="${MYSQLHOST}:${MYSQLPORT}"
+export WORDPRESS_DB_NAME="${MYSQLDATABASE}"
+export WORDPRESS_DB_USER="${MYSQLUSER}"
+export WORDPRESS_DB_PASSWORD="${MYSQLPASSWORD}"
 
-cat > /var/www/html/wp-config.php <<'EOF'
-<?php
-define('DB_NAME', getenv('MYSQLDATABASE'));
-define('DB_USER', getenv('MYSQLUSER'));
-define('DB_PASSWORD', getenv('MYSQLPASSWORD'));
+# Force: pas de socket implicite (évite HY000/2002 "No such file or directory")
+export WORDPRESS_CONFIG_EXTRA=$'define("WP_DEBUG", true);\n'\
+$'define("WP_DEBUG_LOG", true);\n'\
+$'define("WP_DEBUG_DISPLAY", true);\n'\
+$'@ini_set("mysqli.default_socket","");\n'\
+$'@ini_set("pdo_mysql.default_socket","");\n'
 
-// IMPORTANT: keep host WITHOUT port to avoid socket weirdness
-define('DB_HOST', getenv('MYSQLHOST'));
-define('DB_PORT', getenv('MYSQLPORT'));
-
-define('DB_CHARSET', 'utf8mb4');
-define('DB_COLLATE', '');
-
-$table_prefix = 'wp_';
-
-define('WP_DEBUG', true);
-define('WP_DEBUG_LOG', true);
-define('WP_DEBUG_DISPLAY', true);
-
-if ( ! defined('ABSPATH') ) {
-  define('ABSPATH', __DIR__ . '/');
-}
-
-// Force WP to use DB_PORT (some setups ignore DB_PORT)
-$GLOBALS['wpdb']->dbport = defined('DB_PORT') ? DB_PORT : null;
-
-require_once ABSPATH . 'wp-settings.php';
-EOF
-
-echo "🚀 Starting PHP-FPM via official WordPress entrypoint"
+echo "== Starting php-fpm (via official entrypoint) =="
 docker-entrypoint.sh php-fpm -D
 
-echo "🌐 Starting Nginx"
+echo "== Starting nginx =="
 exec nginx -g "daemon off;"
