@@ -21,8 +21,6 @@ define('NONCE_SALT',       'p+#{kc28p *gr&MoLj=+*OwszZA7rcH3|N*[A1FI+Qr)3JE=5VIr
 $table_prefix = 'wp_';
 
 // ** WordPress URLs ** //
-define('WP_HOME', 'https://wordpress-production-2b8e.up.railway.app');
-define('WP_SITEURL', 'https://wordpress-production-2b8e.up.railway.app');
 
 // ** Forcer HTTPS derrière le proxy Railway ** //
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
