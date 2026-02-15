@@ -31,12 +31,12 @@ UPDRAFT_DIR="/var/www/html/wp-content/updraft"
 # 1) Déclare ici tes fichiers + URLs (1 ligne = 1 fichier)
 #    IMPORTANT : garde exactement les noms de fichiers Updraft
 FILES=(
-  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-db.gz|https://drive.google.com/file/d/1Rxx2J6CMAGdPjy6wvtdV2aOvXDRHH1Ia/view?usp=sharing"
-  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-plugins.zip|https://drive.google.com/file/d/1L98nlGp6i6PKvAATCfBNAHTxth3c0lzQ/view?usp=sharing"
-  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-themes.zip|https://drive.google.com/file/d/1FApjpmx0AezeuGhelXm5BJwQew57pbHN/view?usp=sharing"
-  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-uploads.zip|https://drive.google.com/file/d/1yvbjoBXtvU5Y-vmvM6stCY1bci6ra6uV/view?usp=sharing"
-  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-others.zip|https://drive.google.com/file/d/1kBIqppyyzGIayvGehrME95z60B7Jo-4t/view?usp=sharing"
-  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-mu-plugins.zip|https://drive.google.com/file/d/12UJ1sj85rGVWmUJ9IiN-MSlcr-K0_Q1R/view?usp=sharing"
+  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-db.gz|https://drive.google.com/uc?export=download&id=1Rxx2J6CMAGdPjy6wvtdV2aOvXDRHH1Ia"
+  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-plugins.zip|https://drive.google.com/uc?export=download&id=1L98nlGp6i6PKvAATCfBNAHTxth3c0lzQ"
+  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-themes.zip|https://drive.google.com/uc?export=download&id=1FApjpmx0AezeuGhelXm5BJwQew57pbHN"
+  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-uploads.zip|https://drive.google.com/uc?export=download&id=1yvbjoBXtvU5Y-vmvM6stCY1bci6ra6uV"
+  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-others.zip|https://drive.google.com/uc?export=download&id=1kBIqppyyzGIayvGehrME95z60B7Jo-4t"
+  "backup_2026-02-15-1738_HeyLisa_e6bc89837805-mu-plugins.zip|https://drive.google.com/uc?export=download&id=12UJ1sj85rGVWmUJ9IiN-MSlcr-K0_Q1R"
 )
 
 mkdir -p "$UPDRAFT_DIR"
