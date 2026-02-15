@@ -40,6 +40,10 @@ FILES=(
 
 mkdir -p "$UPDRAFT_DIR"
 
+echo "== Fixing permissions =="
+chown -R www-data:www-data /var/www/html
+chmod -R 755 /var/www/html
+
 echo "== Ensuring curl is installed =="
 if ! command -v curl >/dev/null 2>&1; then
   apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
