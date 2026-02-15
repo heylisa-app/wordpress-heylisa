@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # PHP limits + display errors
 RUN { \
-    echo "upload_max_filesize=256M"; \
-    echo "post_max_size=256M"; \
+    echo "upload_max_filesize=1024M"; \
+    echo "post_max_size=1024M"; \
     echo "memory_limit=512M"; \
     echo "max_execution_time=300"; \
     echo "display_errors=On"; \
@@ -24,7 +24,7 @@ server {
   server_name _;
   root /var/www/html;
   index index.php index.html;
-  client_max_body_size 256M;
+  client_max_body_size 1024M;
 
   location / {
     try_files $uri $uri/ /index.php?$args;
