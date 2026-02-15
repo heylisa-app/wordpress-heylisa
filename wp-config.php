@@ -20,8 +20,6 @@ define('NONCE_SALT',       'p+#{kc28p *gr&MoLj=+*OwszZA7rcH3|N*[A1FI+Qr)3JE=5VIr
 // ** WordPress Database Table prefix ** //
 $table_prefix = 'wp_';
 
-// ** WordPress URLs ** //
-
 // ** Forcer HTTPS derrière le proxy Railway ** //
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
     $_SERVER['HTTPS'] = 'on';
